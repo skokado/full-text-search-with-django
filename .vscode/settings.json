@@ -1,0 +1,8 @@
+{
+    "cSpell.words": [
+        "opensearch",
+        "opensearchpy"
+    ],
+    "editor.formatOnSave": true,
+    "ruff.lint.run": "onSave"
+}
