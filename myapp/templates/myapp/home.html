@@ -1,0 +1,22 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}
+  Article List - Simple Blog
+{% endblock %}
+
+{% block content %}
+  <h2>Latest Articles</h2>
+  {% for article in articles %}
+    <div class="article">
+      <h3><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></h3>
+      <p>{{ article.content|truncatechars:100 }}</p>
+      <div>
+        {% for tag in article.tags.all %}
+          <span class="tag">{{ tag.display_name }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  {% empty %}
+    <p>No articles found.</p>
+  {% endfor %}
+{% endblock %}

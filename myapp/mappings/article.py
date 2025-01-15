@@ -1,5 +1,6 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from opensearchpy import InnerDoc
+from opensearchpy.helpers.analysis import Analyzer
 from opensearchpy.helpers import field
 from opensearchpy.helpers.analysis import analyzer
 
@@ -17,6 +18,7 @@ keyword_lowercase_analyzer = analyzer(
 
 
 class ArticleTag(InnerDoc):
+    display_name = field.Text()
     slug = field.Text(analyzer=keyword_lowercase_analyzer)
 
 
@@ -30,42 +32,61 @@ class Article(BaseDocument):
     tags = field.Nested(ArticleTag)
 
     @classmethod
-    def search_by_word(cls, q: str) -> "Response":
-        """
-        Search target fields:
-            - title (weight: 2)
-            - content (weight: 1)
-            - tags.slug (nested) (weight: 1)
-        """
+    def search_by_word(
+        cls,
+        word: str,
+        boost: Optional[dict[str, float]] = None,
+        offset: int = 0,
+        size: int = 200,
+        highlight: Optional[dict[str, dict]] = None,
+    ) -> "Response":
         query = {
             "bool": {
                 "should": [
-                    {"match": {"title": {"query": q, "boost": 2.0}}},
-                    {"match": {"content": {"query": q, "boost": 1.0}}},
+                    {
+                        "match": {
+                            "title": {"query": word} | {"boost": boost["title"]}
+                            if boost and "title" in boost
+                            else {"query": word}
+                        }
+                    },
+                    {
+                        "match": {
+                            "content": {"query": word} | {"boost": boost["content"]}
+                            if boost and "content" in boost
+                            else {"query": word}
+                        }
+                    },
                     {
                         "nested": {
                             "path": "tags",
                             "query": {
-                                "match": {"tags.slug": {"query": q, "boost": 1.0}}
+                                "match": {
+                                    "tags.slug": {"query": word}
+                                    | {"boost": boost["tags.slug"]}
+                                    if boost and "tags.slug" in boost
+                                    else {"query": word}
+                                }
                             },
                         }
                     },
                 ]
             },
         }
-        return (
+        response = (
             cls.search(using=cls.client)
             .query(query)
             .extra(
-                size=300,
-                highlight={
-                    "fields": {
-                        # Highlights the hitted words in the target fields
-                        # defaults is quoted with <em> tag
-                        "title": {},
-                        "content": {},
-                    }
-                },
+                **{
+                    "from": offset,
+                    "size": size,
+                }
+            )
+            .highlight(
+                "title",
+                "content",
+                "tags.slug",
             )
             .execute()
         )
+        return response

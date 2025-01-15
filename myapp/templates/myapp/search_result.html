@@ -1,0 +1,27 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}
+  Search Results - Simple Blog
+{% endblock %}
+
+{% block content %}
+  <h2>Search Results for "{{ query }}"</h2>
+  {% if searched_articles %}
+    {% for article in searched_articles %}
+      <div class="article">
+        <h3><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></h3>
+        <p>{{ article.content|truncatechars:100 }}</p>
+        <div>
+          {% for tag in article.tags %}
+            <span class="tag">{{ tag.display_name }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No articles found matching your search.</p>
+  {% endif %}
+  <p>
+    <a href="{% url 'home' %}">&larr; Back to article list</a>
+  </p>
+{% endblock %}

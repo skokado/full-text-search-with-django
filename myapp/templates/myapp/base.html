@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+        Simple Blog
+      {% endblock %}
+    </title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+      }
+      
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .article {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 20px;
+      }
+      
+      .tag {
+        background-color: #f0f0f0;
+        padding: 2px 5px;
+        margin-right: 5px;
+        border-radius: 3px;
+        font-size: 0.8em;
+      }
+      
+      .search-form {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1><a href="{% url 'home' %}">Simple Blog</a></h1>
+      <form class="search-form" action="{% url 'search' %}" method="get">
+        <input type="text" name="q" placeholder="Search articles..." />
+        <button type="submit">Search</button>
+      </form>
+      {% block content %}
+
+      {% endblock %}
+    </div>
+  </body>
+</html>

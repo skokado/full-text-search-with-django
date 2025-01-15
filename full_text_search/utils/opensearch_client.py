@@ -6,7 +6,7 @@ from opensearchpy import OpenSearch
 @lru_cache(maxsize=1)
 def init_opensearch_client(alias: str = "default") -> OpenSearch:
     return OpenSearch(
-        alias="default",
+        alias=alias,
         hosts=[
             {"host": "localhost", "port": 9200}
         ],  # NOTE Recommended to use environment variables by settings.py
