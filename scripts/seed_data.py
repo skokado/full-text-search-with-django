@@ -22,16 +22,18 @@ Faker.seed(42)
 # --- Create objects into RDS
 user = UserFactory.create()
 python_tag, _ = ArticleTag.objects.get_or_create(slug="python", display_name="Python")
+ruby_tag, _ = ArticleTag.objects.get_or_create(slug="ruby", display_name="Ruby")
+
+study_tag, _ = ArticleTag.objects.get_or_create(slug="study", display_name="Study")
 diary_tag, _ = ArticleTag.objects.get_or_create(slug="diary", display_name="Diary")
 
 ARTICLES_COUNT = 200
 for _ in tqdm(range(ARTICLES_COUNT)):
     a = ArticleFactory.create(author=user)
-    if "python" in a.content:
-        a.tags.add(python_tag)
-    else:
-        a.tags.add(diary_tag)
 
+    tag_choices = [python_tag, ruby_tag, study_tag, diary_tag]
+    tags_to_add = random.choices(tag_choices, k=random.randint(0, len(tag_choices)))
+    a.tags.add(*tags_to_add)
 
 # --- Indexing: create documents into OpenSearch
 client = init_opensearch_client()

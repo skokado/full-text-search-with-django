@@ -38,21 +38,29 @@ class ArticleFactory(DjangoModelFactory):
 
     @factory.lazy_attribute
     def title(self):
+        number_of_title_words = random.randint(5, 15)
+
         if random.random() > 0.5:
             # Include "Python" in title
-            return "This is awesome Python blog."
+            words = fake.words(number_of_title_words)
+            words.insert(
+                random.randint(0, number_of_title_words),
+                random.choice(["Python", "python"]),
+            )
+            return " ".join(words) + "."
         else:
-            # return factory.Faker("sentence", nb_words=4)
-            return fake.sentence(nb_words=4)
+            return fake.sentence(nb_words=number_of_title_words)
 
     @factory.lazy_attribute
     def content(self):
-        number_of_words = random.randint(50, 80)
+        number_of_words = random.randint(100, 300)
 
         if random.random() > 0.5:
             # Include "python" in content
             words = fake.words(nb=number_of_words)
-            words.insert(random.randint(0, number_of_words), "python")
+            words.insert(
+                random.randint(0, number_of_words), random.choice(["Python", "python"])
+            )
             return " ".join(words)
         else:
             return fake.text(max_nb_chars=number_of_words)
