@@ -10,6 +10,7 @@ services:
       - discovery.seed_hosts=opensearch-node1,opensearch-node2
       - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2
       - bootstrap.memory_lock=true
+      - logger.org.opensearch.discovery=INFO
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
       - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD:-MyStr0ngP4ssw0rd!!}
       # For development locally
@@ -39,6 +40,7 @@ services:
       - discovery.seed_hosts=opensearch-node1,opensearch-node2
       - cluster.initial_cluster_manager_nodes=opensearch-node1,opensearch-node2
       - bootstrap.memory_lock=true
+      - logger.org.opensearch.discovery=INFO
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
       - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD:-MyStr0ngP4ssw0rd!!}
       # For development locally
@@ -75,6 +77,7 @@ services:
 volumes:
   opensearch-data1:
   opensearch-data2:
+
 
 networks:
   opensearch-net:
