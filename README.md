@@ -13,6 +13,10 @@ $ tree
 │   ├── models.py        # Django's ORM
 ```
 
+# Demo
+
+![](./docs/img/demo.gif)
+
 # Setup
 
 ```sh
@@ -30,4 +34,7 @@ $ create-your-virtualenv-and-activate
 
 # Start
 (.venv) $ python manage.py runserver
+# => Access to http://localhost:8000
 ```
+
+また http://localhost:5601 で OpenSearch Dashboards へアクセスできます。
